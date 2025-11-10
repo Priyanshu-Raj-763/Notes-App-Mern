@@ -1,16 +1,48 @@
+import Note from "../models/Note.js"
 
- export const getAllNotes = (req,res)=>{
-    res.status(200).send("you got 20 notes")
+export const getAllNotes = async (req, res) => {
+    try {
+        const notes = await Note.find().sort({createdAt:-1}) // -1 will give notes in desc order means latest first
+        res.status(200).json(notes)
+    } catch (error) {
+        console.error("Error in getAllNotes controller ", error)
+        res.status(500).json({ message: "Internal Server Error" })
+
+    }
 }
 
-export const createNotes = (req,res)=>{
-    res.status(201).json({message:"Notes Created Successfully"})
+export const createNotes = async (req, res) => {
+    try {
+        const { title, content } = req.body
+        const note = new Note({ title, content })
+        const savedNote = await note.save()
+        res.status(201).json(savedNote) // send the saved note as a response
+    } catch (error) {
+        console.error("Error in createNotess controller ", error)
+        res.status(500).json({ message: "Internal Server Error" })
+    }
 }
 
-export const updateNotes = (req,res)=>{
-    res.status(201).json({message:"Notes Updated Successfully"})
+export const updateNotes = async (req, res) => {
+    try {
+        const { title, content } = req.body
+       const updatedNote =  await Note.findByIdAndUpdate(req.params.id,{title,content},{new:true})
+       if(!updatedNote) return res.status(404).json({message : "Note not found"})
+        res.status(200).json(updatedNote)
+    } catch (error) {
+        console.error("Error in updateNotes controller ", error)
+        res.status(500).json({ message: "Internal Server Error" })
+    }
 }
 
-export const deleteNotes = (req,res)=>{
-    res.status(201).json({message:"Notes Deleted Successfully"})
+export const deleteNotes = async (req, res) => {
+   try {
+        const deletedNote = await Note.findByIdAndDelete(req.params.id)
+        if(!deletedNote) return res.status(404).json({message : "Note not found"})
+        res.status(200).json(deletedNote)
+
+   } catch (error) {
+    console.error("Error in deleteNotes controller ", error)
+        res.status(500).json({ message: "Internal Server Error" })
+   }
 }
