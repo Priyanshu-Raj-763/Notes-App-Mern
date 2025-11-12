@@ -16,7 +16,7 @@ const HomePage = () => {
     const fetchNotes = async () => {
       try {
         const res = await axios.get("http://localhost:5001/api/notes")
-        console.log(res.data)
+        // console.log(res.data)
         setNotes(res.data)
 
       } catch (error) {
@@ -42,7 +42,7 @@ const HomePage = () => {
         {notes.length >0 && !isRateLimited && (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {notes.map((note)=>(
-              <NoteCard key={note._id} note={note}/>
+              <NoteCard key={note._id} note={note} setNotes={setNotes}/>
             ))}
           </div>
         )}
