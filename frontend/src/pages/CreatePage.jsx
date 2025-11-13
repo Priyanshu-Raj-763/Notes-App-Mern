@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { toast } from "react-hot-toast"
 import axios from 'axios'
+import api from '../lib/axios.js'
 
 const CreatePage = () => {
   const [title, setTitle] = useState("")
@@ -19,10 +20,10 @@ const CreatePage = () => {
     }
     setIsLoading(true)
     try {
-      const res = await axios.post("http://localhost:5001/api/notes",{
+      const res = await api.post("/notes",{
         title,content
       })
-      console.log(res.data)
+      // console.log(res.data)
       toast.success("Note Created Successfully")
       navigate("/")
 
